@@ -1,7 +1,7 @@
 <template>
   <div class="index-page">
     <a-input-search
-      v-model:value="searchParams.text"
+      v-model:value="searchText"
       placeholder="input search text"
       enter-button="Search"
       size="large"
@@ -45,11 +45,12 @@ const router = useRouter();
 const route = useRoute();
 const activeKey = route.params.category;
 const initSearchParams = {
+  type: "",
   text: "",
   pageSize: 10,
   pageNum: 1,
 };
-
+const searchText = ref(route.query.text || "");
 // /**
 //  * 加载数据（分散）
 //  */
@@ -79,38 +80,64 @@ const initSearchParams = {
 //   });
 // };
 
+// /**
+//  * 加载数据(统一)
+//  */
+// const loadData = (params: any) => {
+//   const query = {
+//     ...params,
+//     searchText: params.text,
+//   };
+//
+//   myAxios.post("/search/all", query).then((res: any) => {
+//     postList.value = res.postList;
+//     userList.value = res.userList;
+//     pictureList.value = res.pictureList;
+//   });
+// };
+
 /**
- * 加载数据(统一)
+ * 加载单类数据(统一)
  */
 const loadData = (params: any) => {
+  const { type } = params;
   const query = {
     ...params,
     searchText: params.text,
   };
 
   myAxios.post("/search/all", query).then((res: any) => {
-    postList.value = res.postList;
-    userList.value = res.userList;
-    pictureList.value = res.pictureList;
+    console.log(res);
+    if (type === "post") {
+      postList.value = res.dataList;
+    } else if (type === "user") {
+      userList.value = res.dataList;
+    } else if (type === "picture") {
+      pictureList.value = res.dataList;
+    }
   });
 };
 
 const searchParams = ref(initSearchParams);
 // 首次请求
-loadData(initSearchParams);
+// loadData(initSearchParams);
 
 watchEffect(() => {
   searchParams.value = {
     ...initSearchParams,
     text: route.query.text,
+    type: route.params.category,
   } as any;
+  loadData(searchParams.value);
 });
 
 const onSearch = (value: string) => {
   router.push({
-    query: searchParams.value,
+    query: {
+      ...searchParams.value,
+      text: value,
+    },
   });
-  loadData(searchParams.value);
 };
 
 const onTabChange = (key: string) => {

@@ -1,8 +1,7 @@
 package com.xulei.yuso.model.vo;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xulei.yuso.model.entity.Picture;
-import com.xulei.yuso.model.entity.Post;
-import com.xulei.yuso.model.entity.User;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -22,6 +21,8 @@ public class SearchVO implements Serializable {
     private List<Picture> pictureList;
 
     private List<UserVO> userList;
+
+    private List<?> dataList;
 
     private static final long serialVersionUID = 1L;
 }

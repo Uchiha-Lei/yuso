@@ -93,5 +93,4 @@ Thumbs.db
 .vscode/
 .history/
 
-# Exclude nested git repositories
-yuso-frontend/
+# 无排除的嵌套git仓库
